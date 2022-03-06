@@ -1,0 +1,21 @@
+// Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
+// Licensed under MIT License, see LICENSE for details.
+
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "airbnb-base", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "ignorePatterns": ["**/*.test.js"],
+  "plugins": ["prettier", "json"],
+  "rules": {
+    "prettier/prettier": "error",
+    "quotes": "error"
+  }
+}

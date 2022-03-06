@@ -1,0 +1,49 @@
+// Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
+// Licensed under MIT License, see LICENSE for details.
+
+.container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.menuTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  @media screen and (max-width: 451px) {
+    display: none;
+  }
+}
+
+.menuBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  @media screen and (min-width: 451px) {
+    display: none;
+  }
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52px;
+  bottom: 0;
+
+  @media screen and (max-width: 451px) {
+    top: 0;
+    bottom: 52px;
+  }
+}
+
+.relativePositioning {
+  position: relative;
+}

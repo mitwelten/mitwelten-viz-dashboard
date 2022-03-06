@@ -1,0 +1,143 @@
+// Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
+// Licensed under MIT License, see LICENSE for details.
+
+.container {
+  background-color: white;
+  box-shadow: 0 0 5px black;
+  position: absolute;
+  bottom: 28px;
+  right: 58px;
+  width: 460px;
+  z-index: 500;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  @media screen and (max-width: 910px) {
+    left: 70px;
+    right: 58px;
+    width: unset;
+  }
+}
+
+.calendar {
+  padding: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  text-align: center;
+
+  &:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+  }
+}
+
+.axisContainer {
+  flex-grow: 1;
+  padding: 18px 20px 4px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 6px;
+  justify-content: stretch;
+}
+
+.slider {
+  position: relative;
+  z-index: 501;
+  width: 98%;
+  height: 11px;
+  grid-column: 1 / 3;
+  grid-row: 1;
+  justify-self: center;
+}
+
+.track {
+  position: absolute;
+  z-index: 501;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  background-color: rgba(14, 180, 78, 0.3);
+}
+
+.range {
+  position: absolute;
+  z-index: 502;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  background-color: rgba(14, 180, 78, 0.6);
+}
+
+.thumb {
+  position: absolute;
+  z-index: 503;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: rgb(21, 164, 19);
+  box-shadow: 0 0 0 0 rgb(21, 164, 19);
+  transition: box-shadow 0.4s ease-in-out;
+
+  &.left {
+    transform: translate(-11px, -6px);
+  }
+
+  &.right {
+    transform: translate(11px, -6px);
+  }
+
+  &.hover {
+    box-shadow: 0 0 0 1px rgb(21, 164, 19);
+  }
+
+  &.focus {
+    box-shadow: 0 0 0 3px rgb(21, 164, 19);
+  }
+}
+
+.inputRange {
+  pointer-events: none;
+  -webkit-appearance: none;
+  z-index: 502;
+  width: 100%;
+  opacity: 0;
+  cursor: w-resize;
+  grid-column: 1 / 3;
+  grid-row: 1;
+  justify-self: center;
+
+  &::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 16px;
+    height: 20px;
+    border-radius: 0;
+    border: 0 none;
+    background-color: red;
+    -webkit-appearance: none;
+  }
+
+  &::-webkit-slider-runnable-track {
+    background-color: #9aee99;
+  }
+}
+
+.labelFrom {
+  font-size: 14px;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.labelTo {
+  font-size: 14px;
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+}

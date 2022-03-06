@@ -1,0 +1,43 @@
+// Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
+// Licensed under MIT License, see LICENSE for details.
+
+.title {
+  display: inline-block;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.rightAligned {
+  margin-left: auto;
+  & > div {
+    display: inline-block;
+    margin: 0 6px;
+  }
+}
+
+.arrow {
+  margin-right: 10px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.4s;
+}
+
+.arrow:hover {
+  background-color: #eee;
+}
+
+.rotated {
+  transform: rotateZ(180deg);
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+
+.icon {
+  margin-left: 16px;
+}

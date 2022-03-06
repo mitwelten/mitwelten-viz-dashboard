@@ -1,0 +1,76 @@
+{
+  "name": "mitwelten-dashboard",
+  "version": "1.0.0",
+  "description": "This is a web application, which visualizes incoming data in an interactive dashboard.",
+  "main": "server.js",
+  "scripts": {
+    "build": "npm run build:client && npm run build:server && shx rm -rf build && cd ../client && shx cp -r build ../server",
+    "build:client": "cd ../client && shx rm -rf build && npm run build",
+    "build:server": "shx rm -rf dist && webpack",
+    "dependencies": "npm i && cd ../client && npm i",
+    "dev": "nodemon --exec \"node_modules\\.bin\\webpack && node_modules\\.bin\\babel-node\" dist/server.js",
+    "fix-lint": "eslint --fix src",
+    "lint": "eslint src",
+    "push": "(npm run fix-lint && git add . && git commit -m \"fixes linting issues\" && git push) || git push",
+    "prettier": "prettier --check src",
+    "start": "node dist/server.js || (npm run build && node dist/server.js)",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitwelten/mitwelten-hs20-imvs02.git"
+  },
+  "keywords": [
+    "ip6",
+    "bachelor-thesis",
+    "bachelor",
+    "fhnw",
+    "mitwelten",
+    "web",
+    "backend",
+    "server",
+    "REST",
+    "websockets",
+    "HT",
+    "computer",
+    "science"
+  ],
+  "author": "Thushyanthan Saravani and Mithusan Sivakumar",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/mitwelten/mitwelten-hs20-imvs02/issues"
+  },
+  "homepage": "https://github.com/mitwelten/mitwelten-hs20-imvs02#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv-extended": "^2.9.0",
+    "express": "^4.17.1",
+    "log4js": "^6.3.0",
+    "node-schedule": "^2.0.0",
+    "socket.io": "^4.3.0",
+    "swagger-ui-express": "^4.3.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "babel-loader": "^8.2.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-node": "^2.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.3.1",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.4.1",
+    "shx": "^0.3.3",
+    "webpack": "^5.55.1",
+    "webpack-cli": "^4.8.0"
+  }
+}

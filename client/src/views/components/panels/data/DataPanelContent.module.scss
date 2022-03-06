@@ -1,0 +1,13 @@
+// Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
+// Licensed under MIT License, see LICENSE for details.
+
+.content {
+  padding: 0 14px;
+  overflow-y: auto;
+  height: fit-content;
+  max-height: calc(100vh - (2 * 18px) - 120px - 60px);
+
+  @media screen and (max-width: 910px) {
+    max-height: calc(100vh - (2 * 18px) - 210px - 60px);
+  }
+}

@@ -1,0 +1,498 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This service provides REST endpoints to get data of Mitwelten.",
+    "version": "1.0.0",
+    "title": "Mitwelten Dashboard"
+  },
+  "host": "",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "nodes",
+      "description": "Access to information about nodes from Mitwelten."
+    },
+    {
+      "name": "env",
+      "description": "Access to environment data from Mitwelten"
+    },
+    {
+      "name": "pax",
+      "description": "Access to pax data from Mitwelten"
+    },
+    {
+      "name": "urls",
+      "description": "Access to resources with direct URLs of Mitwelten"
+    }
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/nodes": {
+      "get": {
+        "tags": ["nodes"],
+        "summary": "Retrieve all nodes",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved nodes contains data after given timestamp. If no timestamp is provided, there are no restriction to existing data.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved nodes contains data before given timestamp. If no timestamp is provided, there are no restriction to existing data.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/nodes"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}": {
+      "get": {
+        "tags": ["nodes"],
+        "summary": "Retrieves information about given node_id",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "node_id",
+            "in": "path",
+            "description": "Specified node_id to retriev information about",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved nodes contains data after given timestamp. If no timestamp is provided, there are no restriction to existing data.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved nodes contains data before given timestamp. If no timestamp is provided, there are no restriction to existing data.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/nodes"
+            }
+          },
+          "400": {
+            "description": "Format of node_id is wrong. It has to be XXXX-XXXX."
+          },
+          "404": {
+            "description": "Given node_id was not found"
+          }
+        }
+      }
+    },
+    "/env": {
+      "get": {
+        "tags": ["env"],
+        "summary": "Retrieve all envirnoment sensor data",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved data are after given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved data are before given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of data to be returned in timestamp ascending order.",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/env"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/env/{node_id}": {
+      "get": {
+        "tags": ["env"],
+        "summary": "Retrieve envirnoment sensor data of specific node",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "node_id",
+            "in": "path",
+            "description": "Specified node_id to retriev information about",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved data are after given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved data are before given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of data to be returned in timestamp ascending order.",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/env"
+            }
+          },
+          "400": {
+            "description": "Format of node_id is wrong. It has to be XXXX-XXXX."
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pax": {
+      "get": {
+        "tags": ["pax"],
+        "summary": "Retrieve all pax sensor data",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved data are after given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved data are before given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of data to be returned in timestamp ascending order.",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/pax"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pax/{node_id}": {
+      "get": {
+        "tags": ["pax"],
+        "summary": "Retrieve pax sensor data of specific node",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "node_id",
+            "in": "path",
+            "description": "Specified node_id to retriev information about",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved data are after given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved data are before given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of data to be returned in timestamp ascending order.",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/pax"
+            }
+          },
+          "400": {
+            "description": "Format of node_id is wrong. It has to be XXXX-XXXX."
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/urls": {
+      "get": {
+        "tags": ["urls"],
+        "summary": "Retrieve all resources reachable with direct urls",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved data contains urls after given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved data contains urls before given timestamp.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/url"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/urls/images": {
+      "get": {
+        "tags": ["urls"],
+        "summary": "Retrieve all images with direct urls",
+        "description": "",
+        "operationId": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The starting timestamp in ISO format. The retrieved data contains urls after given timestamp.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "The ending timestamp in ISO format. The retrieved data contains urls before given timestamp.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/url"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "nodes": {
+      "type": "object",
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "example": "5735-6956"
+        },
+        "location_id": {
+          "type": "number",
+          "example": 10
+        },
+        "type": {
+          "type": "string",
+          "example": "env"
+        },
+        "description": {
+          "type": "string",
+          "example": "Environment sensor"
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "example": "5735-6956"
+        },
+        "voltage": {
+          "type": "number",
+          "example": 4
+        },
+        "voltageUnit": {
+          "type": "string",
+          "example": "V"
+        },
+        "temperature": {
+          "type": "number",
+          "example": 7.82
+        },
+        "temperatureUnit": {
+          "type": "string",
+          "example": "°C"
+        },
+        "humidity": {
+          "type": "number",
+          "example": 93.78
+        },
+        "humidityUnit": {
+          "type": "string",
+          "example": "%"
+        },
+        "moisture": {
+          "type": "number",
+          "example": 567
+        },
+        "moistureUnit": {
+          "type": "string",
+          "example": "%"
+        },
+        "time": {
+          "type": "string",
+          "example": "2021-11-30T16:51:45.864688+01:00"
+        }
+      }
+    },
+    "pax": {
+      "type": "object",
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "example": "4496-3521"
+        },
+        "voltage": {
+          "type": "number",
+          "example": 2.68
+        },
+        "voltageUnit": {
+          "type": "string",
+          "example": "V"
+        },
+        "pax": {
+          "type": "number",
+          "example": 17
+        },
+        "paxUnit": {
+          "type": "number",
+          "example": ""
+        },
+        "time": {
+          "type": "date",
+          "example": "2021-11-23T21:56:36.745248+01:00"
+        }
+      }
+    },
+    "url": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "example": "https://mitwelten-backend.herokuapp.com/api/images/IMG_20211022_155430.jpg"
+        }
+      }
+    }
+  }
+}

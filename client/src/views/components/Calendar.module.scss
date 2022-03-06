@@ -1,0 +1,41 @@
+// Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
+// Licensed under MIT License, see LICENSE for details.
+
+.container {
+  z-index: 500;
+  position: absolute;
+  bottom: 107px;
+  right: 58px;
+  width: 460px;
+  padding: 8px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0 0 5px black;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  transition: bottom 0.5s ease-in-out, box-shadow 0.5s ease;
+
+  @media screen and (max-width: 910px) {
+    left: 70px;
+    right: 58px;
+    width: unset;
+  }
+}
+
+.label {
+  font-size: 14px;
+  width: 49%;
+
+  & > input {
+    width: 100%;
+  }
+}
+
+.containerHidden {
+  bottom: 40px;
+  box-shadow: 0 0 0 black;
+}
