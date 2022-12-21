@@ -18,7 +18,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: #15a413;
+  color:rgb(55, 222, 138);
 }
 
 h1 {
@@ -31,5 +31,5 @@ div,
 span {
   font-weight: 400;
   font-size: 18px;
-  color: black;
+  color: rgb(44, 48, 59);
 }

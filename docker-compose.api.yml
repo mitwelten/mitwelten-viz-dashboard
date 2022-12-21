@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  postgres:
+    env_file: ./server/.env
+    image: postgres
+    ports: 
+      - '5432:5432'
+    volumes:
+      - mitwelten_user_db:/var/lib/postgresql/data
+  api:
+    env_file: ./server/.env
+    container_name: api
+    ports: 
+      - '8080:8080'
+    depends_on:
+      - postgres
+    restart: always
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    image: 22fsimvs31/mitwelten-fs22-imvs31:prod_api
+    volumes:
+      - ./server:/app/
+volumes:
+  mitwelten_user_db:

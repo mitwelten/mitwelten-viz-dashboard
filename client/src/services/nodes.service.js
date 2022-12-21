@@ -1,7 +1,7 @@
 // Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
 // Licensed under MIT License, see LICENSE for details.
 
-import config from '../assets/application.json';
+import config from '../assets/application.js';
 
 const nodesService = {
   getAll: async () => {

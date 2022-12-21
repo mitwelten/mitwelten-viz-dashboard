@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  postgres:
+    env_file: ./server/.env
+    image: postgres
+    ports: 
+      - '5432:5432'
+    volumes:
+      - mitwelten_user_db:/var/lib/postgresql/data
+  api:
+    env_file: ./server/.env
+    container_name: api
+    depends_on:
+      - postgres
+    restart: always
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    image: 22fsimvs31/mitwelten-fs22-imvs31:prod_api
+    volumes:
+      - ./server:/app/
+  client:
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    image: "22fsimvs31/mitwelten-fs22-imvs31:prod_client"
+    restart: always
+    container_name: client
+    volumes:
+     - ./client:/app
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - api
+      - client
+    restart: always
+    
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+  certbot:
+      image: certbot/certbot:latest
+      volumes:
+       - ./certbot/www/:/var/www/certbot/:rw
+       - ./certbot/conf/:/etc/letsencrypt/:rw
+volumes:
+  mitwelten_user_db:

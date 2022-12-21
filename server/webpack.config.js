@@ -1,7 +1,12 @@
 // Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
 // Licensed under MIT License, see LICENSE for details.
 
-const path = require('path');
+import { fileURLToPath } from 'url';
+
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
@@ -13,6 +18,11 @@ module.exports = {
   },
   mode: 'development',
   externals: [nodeExternals()],
+  devServer: {
+    compress: true,
+    allowedHosts: 'all',
+  },
+
   module: {
     rules: [
       {

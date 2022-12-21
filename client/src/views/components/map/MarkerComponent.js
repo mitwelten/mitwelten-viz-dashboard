@@ -1,25 +1,34 @@
 // Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
 // Licensed under MIT License, see LICENSE for details.
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, Tooltip } from 'react-leaflet';
 import { useSelector } from 'react-redux';
 import MarkerIcon from './MarkerIcon';
 import { getSubscription } from '../../../state/selectors/nodes.selector';
 
-const MarkerComponent = ({ nodeId, position, tooltip, type, clickHandler }) => {
-  const [hovering, setHovering] = useState(false);
-  const subscription = useSelector(getSubscription);
+const MarkerComponent = ({
+  nodeId,
+  active,
+  position,
+  tooltip,
+  type,
+  onClick,
+  disabled,
+}) => {
+  const [markerIcon, setMarkerIcon] = useState(MarkerIcon(type, false));
+  useEffect(() => {
+    setMarkerIcon(MarkerIcon(type, active));
+  }, [active]);
 
   return (
     <Marker
+      disabled={disabled}
       position={position}
-      icon={MarkerIcon(type, hovering, nodeId === subscription)}
+      icon={markerIcon}
       eventHandlers={{
-        click: clickHandler,
-        mouseover: () => setHovering(true),
-        mouseout: () => setHovering(false),
+        click: !disabled && onClick,
       }}
     >
       {tooltip && <Tooltip direction="top">{tooltip}</Tooltip>}
@@ -30,15 +39,18 @@ const MarkerComponent = ({ nodeId, position, tooltip, type, clickHandler }) => {
 MarkerComponent.defaultProps = {
   tooltip: '',
   type: '',
-  clickHandler: () => {},
+  onClick: () => {},
+  active: false,
 };
 
 MarkerComponent.propTypes = {
   nodeId: PropTypes.string.isRequired,
+  active: PropTypes.boolean,
   position: PropTypes.arrayOf(PropTypes.number).isRequired,
   tooltip: PropTypes.string,
   type: PropTypes.string,
-  clickHandler: PropTypes.func,
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 export default MarkerComponent;

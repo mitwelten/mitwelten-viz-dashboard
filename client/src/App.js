@@ -1,46 +1,80 @@
 // Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
 // Licensed under MIT License, see LICENSE for details.
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
-import { Route, Routes } from 'react-router';
+import PropTypes from 'prop-types';
+import useToken from './hooks/useToken';
+import { Route, Routes, Navigate, Outlet } from 'react-router';
 import { io } from 'socket.io-client';
 import { loadNodes } from './state/actions/nodes.action';
 import { socketConnection } from './state/actions/socket.action';
-import Menu from './views/components/Menu';
+import FilterBar from './views/components/FilterBar';
 import NotFound from './views/NotFound';
 import MapContainer from './views/containers/MapContainer';
+import EntriesContainer from './views/containers/EntriesContainer';
 import Interviews from './views/Interviews';
+import Login from './views/Login';
 import Evaluations from './views/Evaluations';
 import styles from './App.module.scss';
 
+const ProtectedRoute = ({ token, redirectPath = '/login', children }) => {
+  if (!token) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  return children ? children : <Outlet />;
+};
+
+ProtectedRoute.propTypes = {
+  token: PropTypes.string,
+  redirectPath: PropTypes.string,
+  children: PropTypes.node,
+};
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#37DE8A',
+    },
+    secondary: {
+      main: 'rgb(44, 48, 59)',
+    },
+  },
+});
+
 const App = () => {
   const dispatch = useDispatch();
+  const { token, setToken } = useToken();
 
   useEffect(() => {
-    dispatch(socketConnection(io()));
     dispatch(loadNodes);
   }, [dispatch]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.menuTop}>
-        <Menu />
-      </div>
-      <div className={styles.content}>
-        <div className={styles.relativePositioning}>
-          <Routes>
-            <Route path="/" element={<MapContainer />} />
-            <Route path="/interviews" element={<Interviews />} />
-            <Route path="/evaluations" element={<Evaluations />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+    <ThemeProvider theme={theme}>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <div className={styles.relativePositioning}>
+            <Routes>
+              <Route path="/" element={<MapContainer />} />
+              <Route path="/login" element={<Login setToken={setToken} />} />
+              <Route element={<ProtectedRoute token={token} />}>
+                <Route path="/entries" element={<EntriesContainer />} />
+              </Route>
+              <Route path="/interviews" element={<Interviews />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/evaluations" element={<Evaluations />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </div>
+        <div className={styles.menuBottom}>
+          <FilterBar />
         </div>
       </div>
-      <div className={styles.menuBottom}>
-        <Menu />
-      </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

@@ -8,13 +8,26 @@ import makeNode from '../resources/node';
 
 const logger = getLogger();
 
+const nodeTypes = [
+  'pax',
+  'Pax',
+  'env',
+  'HumiTemp',
+  'HumiTempMoisture',
+  'Moisture',
+];
+
 const saveNodes = async (dataAccessor) => {
   if (!dataAccessor) {
     throw new Error('No data accessor provided');
   }
 
   const fetchedNodes = await dataAccessor.findAllNodes();
-  const nodes = fetchedNodes.map((node) => makeNode(node));
+  const nodes = fetchedNodes
+    .filter((node) => nodeTypes.includes(node.type))
+    .map((node) => {
+      makeNode(node);
+    });
   const nodesString = JSON.stringify(nodes, null, 2);
 
   try {

@@ -2,6 +2,9 @@
 // Licensed under MIT License, see LICENSE for details.
 
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import Typography from '@mui/material/Typography';
+import { subscribeNode } from '../../state/actions/nodes.action';
 import { useDispatch, useSelector } from 'react-redux';
 import { unsubscribeNode } from '../../state/actions/nodes.action';
 import { loadValues } from '../../state/actions/values.action';
@@ -15,9 +18,8 @@ import styles from './DataPanelContainer.module.scss';
 import Chart from '../components/Chart';
 import DataPanelAction from '../components/panels/data/DataPanelActions';
 
-const DataPanelContainer = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
+const DataPanelContainer = ({ node, nodesToCompare, onClose }) => {
+  console.log('nodesToCompare', nodesToCompare);
   const socket = useSelector(getSocket);
   const subscription = useSelector(getSubscription);
   const values = useSelector(getValues);
@@ -41,60 +43,60 @@ const DataPanelContainer = () => {
     a.remove();
   };
 
-  useEffect(() => {
-    socket?.on('data', () => dispatch(loadValues));
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    if (subscription) {
-      setCollapsed(false);
-      dispatch(loadValues);
-    }
-  }, [subscription]);
-
   return (
     <>
-      <div
-        className={`${styles.container} ${
-          collapsed ? styles.containerCollapsed : ''
-        }`}
+      <DataPanelHeader
+        onIconClick={() => {
+          onClose();
+        }}
       >
-        {subscription && (
-          <>
-            <DataPanelHeader
-              collapsed={collapsed}
-              onIconClick={() => {
-                setCollapsed(true);
-                setTimeout(() => dispatch(unsubscribeNode), 400);
-              }}
-            >
-              {subscription}
-            </DataPanelHeader>
-            <DataPanelContent>
-              <div className={styles.panelContent}>
-                {values.length > 0 &&
-                  Object.keys(values[0])
-                    .filter(
-                      (key) =>
-                        !['node_id', 'time', 'voltage'].includes(key) &&
-                        !key.toLowerCase().includes('unit')
-                    )
-                    .map((key) => (
-                      <div key={key} className={styles.sensorDataContainer}>
-                        <Chart property={key} />
-                      </div>
-                    ))}
+        {nodesToCompare.map((n, index) => (
+          <Typography
+            variant="h6"
+            key={index}
+            sx={{
+              color: `rgb(${38 * index}, ${155 * index}, ${96 * index})`,
+              display: 'inline',
+            }}
+          >
+            {n.node_id}
+            {index + 1 !== nodesToCompare.length && ', '}
+          </Typography>
+        ))}
+      </DataPanelHeader>
+      <DataPanelContent>
+        <div>
+          <div className={styles.panelContent}>
+            {node.type === 'pax' ? (
+              <div className={styles.sensorDataContainer}>
+                <Chart property={node.type} nodesToCompare={nodesToCompare} />
               </div>
-            </DataPanelContent>
-            <DataPanelAction
-              share={() => dispatch(copyURLToClipboard)}
-              exportData={exportData}
-            />
-          </>
-        )}
-      </div>
+            ) : (
+              ['humidity', 'moisture', 'temperature'].map((type, index) => (
+                <div key={index} className={styles.sensorDataContainer}>
+                  <Chart property={type} nodesToCompare={nodesToCompare} />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </DataPanelContent>
+      <DataPanelAction
+        share={() => dispatch(copyURLToClipboard)}
+        exportData={exportData}
+      />
     </>
   );
+};
+
+DataPanelContainer.propTypes = {
+  collapseGallery: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  popupState: PropTypes.object,
+  node: PropTypes.object,
+  close: PropTypes.func,
+  anchorEl: PropTypes.object,
+  nodesToCompare: PropTypes.array,
 };
 
 export default DataPanelContainer;

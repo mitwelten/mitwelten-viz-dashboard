@@ -3,13 +3,22 @@
 
 import makeNode from '../resources/node';
 
-const listAllNodes = async (dataAccessor) => {
+const nodeTypes = [
+  'pax',
+  'Pax',
+  'env',
+  'HumiTemp',
+  'HumiTempMoisture',
+  'Moisture',
+];
+
+const listAllNodes = async (dataAccessor, from, to) => {
   if (!dataAccessor) {
     throw new Error('No data accessor provided');
   }
 
-  const nodes = await dataAccessor.findAllNodes();
-
+  const nodes = await dataAccessor.findAllNodes(from, to);
+  
   return nodes.map((node) => makeNode(node));
 };
 

@@ -4,39 +4,39 @@
 
 This server is build with [NodeJs](https://nodejs.org/) using the [ExpressJs](https://expressjs.com/) framework.
 
-## Setup Instructions
+## Setup Instructions for local dev setup
 
-### 1. Install NodeJs & NPM
+Prerequisites:
+- docker
+- docker-compose
+- nodejs & npm
 
-If you have already installed NodeJs and NPM, you might skip this step.
+### 1. Install Docker
 
-Go to the webpage of NodeJs, navigate to [_Downloads_](https://nodejs.org/en/download/) and choose the correct installer for your environment. After the installation process, open a shell or command line prompt of your choise. Type the following command:
+If you have already installed Docker and Docker-Compose, you might skip this step.
+
+Go to the webpage of Docker, navigate to [_get-docker_](https://docs.docker.com/get-docker/) and choose the correct installer for your environment. After the installation process, open a shell or command line prompt of your choise. Type the following command:
 
 ```shell
-$ node -v
+$ docker -v
 ```
 
 The output should be a version number, just like the following:
 
 ```shell
-v14.15.4
+Docker version 20.10.8, build 3967b7d
 ```
 
-Usually NPM should have been installed automatically with NodeJs. Please check with the following command:
+Usually Docker Compose should have been installed automatically with Docker. Please check with the following command:
 
 ```shell
-$ npm -v
+$ docker compose --help
 ```
 
-Again, it should print a valid version number like:
-
-```shell
-7.24.1
-```
+It should print a overview:
 
 ### 2. Install dependencies
 
-To be able to build and start the application, the node dependencies (also known as _node_modules_) have to be installed. Open your Terminal, navigate to the folder `server` and run the command to install all dependencies as shown.
 
 ```shell
 $ cd server
@@ -45,33 +45,46 @@ $ npm run dependencies
 
 This script installs all depending node modules for front- and backend.
 
-### 3. Build frontend
+### 3. Build api
 
 Now let's build the frontend and integrate it with the backend server. Therefore type the command to build in your Terminal as shown.
 
 ```shell
-$ cd server
-$ npm run build
+$ docker-compose build # build all docker images
+$ docker-compose up -d # starts up everything in the background
 ```
 
-Now you should have a folder named `build` in your `server` folder.
+Now the pg and api container should have been started!
 
-## Start instructions
-
-If you have followed the [Setup instructions](#setup-instructions), everything should be ready to start the application. Open your Terminal and type the following:
-
-```shell
-$ cd server
-$ npm start
-```
 
 Your output should look similar to this:
 
 ```shell
-> mitwelten-dashboard@1.0.0 start
-> node dist/server.js || (npm run integrate && node dist/server.js)
-
-[2021-09-29T16:05:06.244] [INFO] Dashboard - Server started on port 8080
+> [+] Running 2/2
+> ⠿ Container mitwelten-fs22-imvs31_postgres_1  Started 
+> ⠿ Container mitwelten-fs22-imvs31_api_1       Started
 ```
 
-You are now able to open the web application from your browser with the url [http://localhost:8080](http://localhost:8080).
+You are now able to open the web application from your browser with the url [http://localhost:8080/api](http://localhost:8080/api).
+
+
+### 4. Build the Frontend
+Check out the readme in ../client folder
+
+### 5. Depoly the application
+Build all images with:
+
+```shell
+$ docker compose build
+```
+
+Push the images into the registry
+Pull the images on your server
+Pull current main branch
+Start docker container
+
+```shell
+$ docker-compose up -d
+```
+
+Your appliation has been deployed!

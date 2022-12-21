@@ -7,9 +7,15 @@ import runScheduledJobs from './jobs';
 import socketIo from './socketIo';
 import { getLogger, loadEnvironment } from './utils';
 
-loadEnvironment();
+import { sequelize } from '../db/database';
 
+const start = async () => {
+  sequelize.sync();
+};
+
+loadEnvironment();
 runScheduledJobs();
+start();
 
 // setting up server
 const httpServer = createServer(app);

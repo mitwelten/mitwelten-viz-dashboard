@@ -10,32 +10,26 @@
 }
 
 .menuTop {
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-
-  @media screen and (max-width: 451px) {
-    display: none;
-  }
 }
 
 .menuBottom {
+  display: none;
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-
-  @media screen and (min-width: 451px) {
-    display: none;
-  }
 }
 
 .content {
   position: absolute;
   left: 0;
   right: 0;
-  top: 52px;
+  top: 0;
   bottom: 0;
 
   @media screen and (max-width: 451px) {

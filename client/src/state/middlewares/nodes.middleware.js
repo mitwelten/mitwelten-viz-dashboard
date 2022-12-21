@@ -17,11 +17,16 @@ const nodesMiddleware = (services) => (store) => (next) => async (action) => {
 
   switch (action.type) {
     case LOAD_NODES: {
+      const startTime = store.getState().time.start;
+      const endTime = store.getState().time.end;
       store.dispatch(setLoadingState(true));
-      const nodes = await services.nodes.getAll();
+      const nodes = await services.nodes.getInTimeRange(
+        new Date(startTime),
+        new Date(endTime)
+      );
       store.dispatch(loadNodesSuccess(nodes));
-      store.dispatch(setLoadingState(false));
       store.dispatch(filterNodes);
+      store.dispatch(setLoadingState(false));
       break;
     }
 

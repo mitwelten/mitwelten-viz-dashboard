@@ -3,24 +3,12 @@
 
 import { scheduleJob } from 'node-schedule';
 import fetchAndSaveNodes from './fetchAndSaveNodes';
-import fetchEnvSensorData from './fetchEnvSensorData';
-import fetchPaxSensorData from './fetchPaxSensorData';
 
 const jobs = [
   {
     name: 'nodes',
     interval: '0 * * * *',
     method: fetchAndSaveNodes,
-  },
-  {
-    name: 'pax',
-    interval: '* * * * *',
-    method: fetchPaxSensorData,
-  },
-  {
-    name: 'env',
-    interval: '* * * * *',
-    method: fetchEnvSensorData,
   },
 ];
 

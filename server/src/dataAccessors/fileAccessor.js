@@ -2,14 +2,14 @@
 // Licensed under MIT License, see LICENSE for details.
 
 import { existsSync, readFileSync } from 'fs';
-import { PATH_NODES_FILE } from '../utils';
+import { PATH_NODES_FILE, PATH_ENTRIES_FILE } from '../utils';
 
 const fileAccessor = () => {
-  const findAllNodes = () =>
+  const findAllEntries = () =>
     new Promise((resolve, reject) => {
-      if (existsSync(PATH_NODES_FILE)) {
-        const nodesString = readFileSync(PATH_NODES_FILE, 'utf-8');
-        resolve(JSON.parse(nodesString));
+      if (existsSync(PATH_ENTRIES_FILE)) {
+        const entriesString = readFileSync(PATH_ENTRIES_FILE, 'utf-8');
+        resolve(JSON.parse(entriesString));
       }
       reject(new Error('File does not exist'));
     });
@@ -26,7 +26,8 @@ const fileAccessor = () => {
     });
 
   return {
-    findAllNodes,
+    findAllEntries,
+
     findNodeById,
   };
 };

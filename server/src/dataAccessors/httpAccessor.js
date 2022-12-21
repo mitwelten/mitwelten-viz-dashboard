@@ -1,8 +1,10 @@
 // Copyright (c) 2022 FHNW, Switzerland. All rights reserved.
 // Licensed under MIT License, see LICENSE for details.
 
-import https from 'https';
+import axios from 'axios';
+import { urlToHttpOptions } from 'url';
 import { addQuery, loadEnvironment, URL_REGEX } from '../utils';
+import filesService from '../resources/filesService';
 
 const formatDateStringToDbFormat = (date) =>
   `${date.getFullYear()}-${
@@ -33,30 +35,64 @@ const addTimeWindowToPath = (path, from, to) => {
   return pathWithTimeWindow;
 };
 
-const makeRequest = (url, path) =>
-  new Promise((resolve, reject) => {
-    try {
-      const request = https.get(`${url}/${path}`, (response) => {
-        let responseData = '';
-        response.on('data', (data) => {
-          responseData += data;
-        });
+const uploadFile = async (i) => {
+  const base64File = i.file;
+  const fileName = i.name;
+  const fileType = i.type;
 
-        response.on('end', () => resolve(JSON.parse(responseData)));
-      });
+  let response;
 
-      request.on('error', (error) => {
-        reject(error);
-      });
+  try {
+    response = await filesService.upload(fileName, base64File, fileType);
+  } catch (err) {
+    console.error(`Error uploading image: ${err.message}`);
+    return new Error(`Error uploading image: ${fileName}`);
+  }
 
-      request.end();
-    } catch (error) {
-      reject(error);
-    }
-  });
+  return response;
+};
+
+const downloadFile = async (id) => {
+  let response;
+  try {
+    const image = await Image.findByPk(id);
+
+    response = await filesService.getFile(image.name);
+    response = filesService.encode(response.Body);
+    response = { ...image.get({ plain: true }), content: response };
+  } catch (err) {
+    console.error(`Error downloading file: ${err.message}`);
+    return new Error(`Error downloading file: ${fileLink}`);
+  }
+
+  return response;
+};
 
 const httpsAccessor = () => {
   loadEnvironment();
+
+  const makeRequest = (url, path, requestType = 'get', requestBody = null) =>
+    axios({
+      method: requestType,
+      data: {
+        ...requestBody,
+      },
+      baseURL: url,
+      url: path,
+      auth: {
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD,
+      },
+    })
+      .then((res) => {
+        console.log('request::', `${url}${path}`, requestType, requestBody);
+        console.log('response::', res.data);
+        return res.data;
+      })
+      .catch((err) => {
+        console.log('request error::', err);
+        throw err?.response?.data || err.message;
+      });
 
   if (!process.env.DATABASE_URL) {
     throw new Error(
@@ -70,118 +106,89 @@ const httpsAccessor = () => {
     );
   }
 
-  const findAllEnvSensorData = (limit = 100, from = '', to = '') => {
-    let path = '/envsensordata?order=time.desc';
+  const findSensorDataByNodeId = (nodeId, limit = 100, from = '', to = '') => {
+    let path = `/data/${nodeId}`;
+    path = !!from && `${path}?from=${from}`;
+    path = !!to && `${path}&to=${to}`;
 
     if (limit && +limit > 0) {
       path = addQuery(path, 'limit', limit);
     }
-
-    path = addTimeWindowToPath(path, from, to);
-
     return makeRequest(process.env.DATABASE_URL, path);
   };
 
-  const findEnvSensorDataByNodeId = (
-    nodeId,
-    limit = 100,
-    from = '',
-    to = ''
-  ) => {
-    let path = addQuery(
-      '/envsensordata?order=time.desc',
-      'node_id',
-      `eq.${nodeId}`
+  const findAllEntries = (from, to) => {
+    const path =
+      !!from && !!to
+        ? `/entries?from=${from ?? ''}&to=${to ?? ''}`
+        : '/entries';
+    return makeRequest(process.env.DATABASE_URL, path);
+  };
+
+  const findEntryById = (id) => {
+    const path = `/entry/${id}`;
+    return makeRequest(process.env.DATABASE_URL, path);
+  };
+
+  const updateEntry = (entryToBeUpdated) => {
+    const path = `/entry/${entryToBeUpdated.id}`;
+    return makeRequest(
+      process.env.DATABASE_URL,
+      path,
+      'patch',
+      entryToBeUpdated
     );
-
-    if (limit && +limit > 0) {
-      path = addQuery(path, 'limit', limit);
-    }
-
-    path = addTimeWindowToPath(path, from, to);
-
-    return makeRequest(process.env.DATABASE_URL, path);
   };
 
-  const findAllPaxSensorData = (limit = 100, from = '', to = '') => {
-    let path = '/paxsensordata?order=time.desc';
-
-    if (limit && +limit > 0) {
-      path = addQuery(path, 'limit', limit);
-    }
-
-    path = addTimeWindowToPath(path, from, to);
-
-    return makeRequest(process.env.DATABASE_URL, path);
+  const createEntry = (entry) => {
+    const path = '/entries';
+    return makeRequest(process.env.DATABASE_URL, path, 'post', entry);
   };
 
-  const findPaxSensorDataByNodeId = (
-    nodeId,
-    limit = 100,
-    from = '',
-    to = ''
-  ) => {
-    let path = addQuery(
-      '/paxsensordata?order=time.desc',
-      'node_id',
-      `eq.${nodeId}`
-    );
-
-    if (limit && +limit > 0) {
-      path = addQuery(path, 'limit', limit);
-    }
-
-    path = addTimeWindowToPath(path, from, to);
-
-    return makeRequest(process.env.DATABASE_URL, path);
+  const deleteEntry = (entry) => {
+    const path = `/entry/${entry.id}`;
+    return makeRequest(process.env.DATABASE_URL, path, 'delete');
   };
 
-  const findAllNodes = () => {
-    const path = '/node';
+  const createTag = (tag) => {
+    const path = '/tag';
+    return makeRequest(process.env.DATABASE_URL, path, 'put', tag);
+  };
+
+  const addTagToEntry = (id, tag) => {
+    const path = `/entry/${id}/tag`;
+    return makeRequest(process.env.DATABASE_URL, path, 'post', tag);
+  };
+
+  const addFileToEntry = (id, file) => {
+    const path = `/entry/${id}/file`;
+    return makeRequest(process.env.DATABASE_URL, path, 'post', file);
+  };
+
+  const deleteFile = (file) => {
+    const path = `/file/${file.id}`;
+    return makeRequest(process.env.DATABASE_URL, path, 'delete');
+  };
+
+  const deleteTagFromEntry = (id, tag) => {
+    const path = `/entry/${id}/tag`;
+    return makeRequest(process.env.DATABASE_URL, path, 'delete', tag);
+  };
+
+  const findAllTags = (from, to) => {
+    const path =
+      !!from && !!to ? `/tags?from=${from ?? ''}&to=${to ?? ''}` : '/tags';
+    return makeRequest(process.env.DATABASE_URL, path);
+  };
+  const findAllNodes = (from, to) => {
+    const path =
+      !!from && !!to ? `/nodes?from=${from ?? ''}&to=${to}` : '/nodes';
     return makeRequest(process.env.DATABASE_URL, path);
   };
 
   const findNodeById = (nodeId) => {
     const path = addQuery('/node', 'node_id', `eq.${nodeId}`);
     return makeRequest(process.env.DATABASE_URL, path);
-  };
-
-  const findNodesInTimeWindow = async (from, to) => {
-    try {
-      const localeFrom = formatDateStringToDbFormat(new Date(from));
-      const localeTo = formatDateStringToDbFormat(new Date(to));
-
-      let paxPath = 'paxsensordata';
-      paxPath = addQuery(paxPath, 'time', `gte.${localeFrom}`);
-      paxPath = addQuery(paxPath, 'time', `lte.${localeTo}`);
-      const paxDataInRange = await makeRequest(
-        process.env.DATABASE_URL,
-        paxPath
-      );
-
-      let envPath = 'envsensordata';
-      envPath = addQuery(envPath, 'time', `gte.${localeFrom}`);
-      envPath = addQuery(envPath, 'time', `lte.${localeTo}`);
-      const envDataInRange = await makeRequest(
-        process.env.DATABASE_URL,
-        envPath
-      );
-
-      const nodeIdsInRange = [
-        ...new Set(
-          [...paxDataInRange, ...envDataInRange].map((data) => data.node_id)
-        ),
-      ];
-      const nodes = await findAllNodes();
-
-      const nodesInRange = nodes.filter((node) =>
-        nodeIdsInRange.includes(node.node_id)
-      );
-
-      return new Promise((resolve) => resolve(nodesInRange));
-    } catch (error) {
-      return new Promise((resolve, reject) => reject(error));
-    }
   };
 
   const findAllUrls = (from = '', to = '') => {
@@ -198,14 +205,23 @@ const httpsAccessor = () => {
   };
 
   return {
-    findAllEnvSensorData,
-    findEnvSensorDataByNodeId,
-    findAllPaxSensorData,
-    findPaxSensorDataByNodeId,
+    findSensorDataByNodeId,
     findAllNodes,
     findNodeById,
-    findNodesInTimeWindow,
     findAllUrls,
+    uploadFile,
+    downloadFile,
+    findAllEntries,
+    findEntryById,
+    updateEntry,
+    deleteEntry,
+    createEntry,
+    findAllTags,
+    createTag,
+    addTagToEntry,
+    deleteTagFromEntry,
+    addFileToEntry,
+    deleteFile,
   };
 };
 

@@ -3,44 +3,36 @@
 
 import { NODE_ID_REGEX } from '../utils';
 
-const makeNode = ({
-  node_id: nodeId,
-  location_id: locationId,
-  type,
-  description,
-} = {}) => {
-  if (!nodeId) {
+const makeNode = (node) => {
+  if (!node.id) {
     throw new Error('Every node must have a node_id');
   }
 
-  if (!NODE_ID_REGEX.test(nodeId)) {
+  if (!NODE_ID_REGEX.test(node.name)) {
     throw new Error(
       'Field node_id is expected to have the pattern of 4 digits, dash and another 4 digits'
     );
   }
 
-  if (!locationId) {
-    throw new Error('Every node must have a location_id');
+  if (!node.location.lat || !node.location.lon) {
+    throw new Error('Provided location is not valid');
   }
 
-  if (!Number.isInteger(locationId)) {
-    throw new Error('Provided location_id is not a number');
-  }
-
-  if (!type) {
+  if (!node.type) {
     throw new Error('Every node must have a type declaration');
   }
 
-  if (type !== 'env' && type !== 'pax') {
-    throw new Error("Declared type must be 'env' or 'pax'");
-  }
-
-  return Object.freeze({
-    node_id: nodeId,
-    location_id: locationId,
-    type,
-    description,
-  });
+  return {
+    id: node.id,
+    node_id: node.name,
+    location: {
+      latitude: node.location.lat,
+      longitude: node.location.lon,
+    },
+    type: node.type,
+    platform: node.platform,
+    description: node.description,
+  };
 };
 
 export default makeNode;

@@ -5,9 +5,12 @@
   padding: 0 14px;
   overflow-y: auto;
   height: fit-content;
+  min-width: 450px;
   max-height: calc(100vh - (2 * 18px) - 120px - 60px);
-
+  
   @media screen and (max-width: 910px) {
+    width: calc(100vw - 20px);
+    min-width: auto;
     max-height: calc(100vh - (2 * 18px) - 210px - 60px);
   }
 }
