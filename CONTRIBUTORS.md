@@ -4,3 +4,4 @@ The following organizations and individuals have contributed to this project:
 * Tushyanthan Saravani, bachelor student at FHNW
 * Tobias Villiger, bachelor student at FHNW
 * Patrick Gutter, bachelor student at FHNW
+* Timeo Wullschleger, master student at FHNW
