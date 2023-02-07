@@ -12,6 +12,7 @@ import {
 
 const MapComponent = ({ children, width, height, zoom, center }) => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const maxZoomLevel = 19.9;
 
   const onScreenResize = (event) => {
     setScreenWidth(event.target.innerWidth);
@@ -37,24 +38,28 @@ const MapComponent = ({ children, width, height, zoom, center }) => {
           padding: 0,
         }}
         zoomControl={false}
+        maxZoom={maxZoomLevel}
       >
         <LayersControl position={'bottomleft'}>
           <LayersControl.BaseLayer name="Stadia Maps">
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">Stadia Maps</a> contributors'
               url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+              maxZoom={maxZoomLevel}
             />
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="SwissTopo">
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">SwissTopo</a> contributors'
               url="https://wmts10.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg"
+              maxZoom={maxZoomLevel}
             />
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="SwissTopo 2">
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">SwissTopo</a> contributors'
               url="https://wmts20.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
+              maxZoom={maxZoomLevel}
             />
           </LayersControl.BaseLayer>
 
@@ -62,12 +67,14 @@ const MapComponent = ({ children, width, height, zoom, center }) => {
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              maxZoom={maxZoomLevel}
             />
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="OpenStreetMap.BlackAndWhite">
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+              maxZoom={maxZoomLevel}
             />
           </LayersControl.BaseLayer>
           {children}

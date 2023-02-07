@@ -15,6 +15,7 @@ import NotFound from './views/NotFound';
 import MapContainer from './views/containers/MapContainer';
 import EntriesContainer from './views/containers/EntriesContainer';
 import Interviews from './views/Interviews';
+import Logout from './views/Logout';
 import Login from './views/Login';
 import Evaluations from './views/Evaluations';
 import styles from './App.module.scss';
@@ -58,14 +59,15 @@ const App = () => {
         <div className={styles.content}>
           <div className={styles.relativePositioning}>
             <Routes>
-              <Route path="/" element={<MapContainer />} />
               <Route path="/login" element={<Login setToken={setToken} />} />
               <Route element={<ProtectedRoute token={token} />}>
                 <Route path="/entries" element={<EntriesContainer />} />
               </Route>
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/" element={<MapContainer />} />
+              <Route path="/evaluations" element={<Evaluations />} />
               <Route path="/interviews" element={<Interviews />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/evaluations" element={<Evaluations />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

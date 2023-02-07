@@ -75,14 +75,22 @@ const FilterBar = ({ tags, showInfoModal }) => {
   const menuItems = [
     {
       text: 'Über das Projekt',
-      iconClass: 'fas fa-poll',
+      iconClass: 'fas fa-solid fa-info',
+      // iconClass: 'fas fa-info',
       path: 'info',
       hidden: isMobile,
     },
     {
       text: 'Login',
-      iconClass: 'fas fa-poll',
+      // text: 'Entries',
+      iconClass: 'fas fa-solid fa-sign-in-alt',
       path: '/entries',
+    },
+    {
+      text: 'Logout',
+      // iconClass: 'fas fa-poll',
+      iconClass: 'fas fa-solid fa-sign-out-alt',
+      path: '/logout',
     },
   ];
 
