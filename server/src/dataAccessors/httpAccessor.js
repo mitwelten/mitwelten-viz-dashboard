@@ -80,13 +80,13 @@ const httpsAccessor = () => {
       baseURL: url,
       url: path,
       auth: {
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
+        username: process.env.API_USERNAME,
+        password: process.env.API_PASSWORD,
       },
     })
       .then((res) => {
-        console.log('request::', `${url}${path}`, requestType, requestBody);
-        console.log('response::', res.data);
+//        console.log('request::', `${url}${path}`, requestType, requestBody);
+//        console.log('response::', res.data);
         return res.data;
       })
       .catch((err) => {

@@ -59,6 +59,7 @@
     "pm2": "^5.2.0",
     "sequelize": "^6.21.4",
     "socket.io": "^4.5.1",
+    "sqlite3": "^5.1.4",
     "swagger-ui-express": "^4.5.0",
     "webpack-node-externals": "^3.0.0"
   },

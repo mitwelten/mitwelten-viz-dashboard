@@ -51,6 +51,7 @@ api.get('/', swaggerUi.setup(swaggerFile));
 
 // routes
 api.use('/login', login);
+api.use('/logout', logout);
 api.use('/nodes', nodesRouter);
 api.use('/data', sensorRouter);
 api.use('/urls', urlsRouter);
