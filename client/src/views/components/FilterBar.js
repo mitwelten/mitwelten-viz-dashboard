@@ -159,7 +159,7 @@ const FilterBar = ({ tags, showInfoModal }) => {
                           !!parseInt(query.from)
                             ? new Date(parseInt(query.from))
                             : sub(new Date(), {
-                                years: 3,
+                                years: 1,
                               })
                         }
                         maxDate={
