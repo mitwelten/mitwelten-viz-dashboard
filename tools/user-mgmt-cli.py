@@ -149,7 +149,6 @@ elif args.remove == True:
     if click.confirm("Do you want to delete {} ?".format(uname)):
         click.echo("deleting user '{}'".format(uname))
         delete_user(uname)
-    exit()
 
 # List users
 elif args.list == True:
