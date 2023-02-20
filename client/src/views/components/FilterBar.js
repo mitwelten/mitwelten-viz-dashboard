@@ -159,7 +159,7 @@ const FilterBar = ({ tags, showInfoModal }) => {
                           !!parseInt(query.from)
                             ? new Date(parseInt(query.from))
                             : sub(new Date(), {
-                                years: 1,
+                                years: 3,
                               })
                         }
                         maxDate={
@@ -167,7 +167,7 @@ const FilterBar = ({ tags, showInfoModal }) => {
                             ? new Date(parseInt(query.to))
                             : new Date()
                         }
-                        minDate={sub(new Date(), { years: 2 })}
+                        minDate={sub(new Date(), { years: 4 })}
                         name="from"
                         label="Startdatum"
                         inputFormat="dd.MM.yyyy"
