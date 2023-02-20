@@ -312,7 +312,7 @@ const EntriesContainer = ({}) => {
                   <MapComponent
                     width="100%"
                     height="290px"
-                    zoom={27}
+                    zoom={19}
                     center={[drawer.location.lat, drawer.location.lon]}
                   >
                     <MarkerComponent
